@@ -6,17 +6,25 @@ public class PlatformGeneration : MonoBehaviour
 {
 
     public GameObject[] Platforms;
-    float timer;
+    public int zPos = 300;
+    public bool creatingSection = false;
+    public int randomSpawn;
 
-    void Start()
+    void Update()
     {
-        timer = Time.deltaTime;
-        if (timer >= 0.5f)
+        if (creatingSection == false)
         {
-            var RandomSpawn = Random.Range(0, Platforms.Length);
-            var Clone = Instantiate(Platforms[RandomSpawn], new Vector3(transform.position.x, transform.position.y, transform.position.z + 220), Quaternion.identity);
-            timer = 0;
-            Destroy(Clone, 20);
+            creatingSection = true;
+            StartCoroutine(GenerateSection());
         }
+    }
+    IEnumerator GenerateSection()
+    {
+        randomSpawn = Random.Range(0, Platforms.Length);
+        var Clone = Instantiate(Platforms[randomSpawn], new Vector3(0, transform.position.y, zPos), Quaternion.identity);
+        zPos += 300;
+        yield return new WaitForSeconds(2);
+        creatingSection = false;
+        
     }
 }
